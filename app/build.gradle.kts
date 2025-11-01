@@ -16,6 +16,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // API Key sudah dimasukkan langsung ke dalam code di Constants.kt
+        // Tidak perlu BuildConfig untuk API key
     }
 
     buildTypes {

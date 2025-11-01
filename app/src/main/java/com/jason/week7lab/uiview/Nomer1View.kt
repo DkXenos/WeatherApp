@@ -19,11 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.jason.week7lab.model.WeatherResponse
+import com.jason.week7lab.data.model.*
+import com.jason.week7lab.ui.theme.Week7LabTheme
+import com.jason.week7lab.utils.Constants
 import com.jason.week7lab.viewmodel.WeatherUiState
 import com.jason.week7lab.viewmodel.WeatherViewModel
 import java.text.SimpleDateFormat
@@ -276,7 +279,7 @@ fun WeatherContent(weather: WeatherResponse) {
             // Weather Icon from API
             if (weather.weather.isNotEmpty()) {
                 val iconCode = weather.weather[0].icon
-                val iconUrl = "https://openweathermap.org/img/wn/${iconCode}.png"
+                val iconUrl = "${Constants.ICON_URL}${iconCode}@2x.png"
 
                 Image(
                     painter = rememberAsyncImagePainter(iconUrl),
@@ -337,7 +340,7 @@ fun WeatherContent(weather: WeatherResponse) {
             WeatherDetailCard(
                 icon = "🌡️",
                 label = "FEELS LIKE",
-                value = "${weather.main.feels_like.toInt()}°"
+                value = "${weather.main.feelsLike.toInt()}°"
             )
         }
 
@@ -450,5 +453,147 @@ fun formatTime(timestamp: Long): String {
     return sdf.format(Date(timestamp * 1000))
 }
 
+// Preview untuk melihat UI tanpa menjalankan emulator
+@Preview(showBackground = true, showSystemUi = true, name = "Weather App Preview")
+@Composable
+fun Nomer1ViewPreview() {
+    Week7LabTheme {
+        Soal1View()
+    }
+}
+
+@Preview(showBackground = false, name = "Weather Content with Data")
+@Composable
+fun WeatherContentPreview() {
+    Week7LabTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF1A237E),
+                            Color(0xFF283593),
+                            Color(0xFF3949AB),
+                            Color(0xFF5C6BC0)
+                        )
+                    )
+                )
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                item {
+                    WeatherContent(
+                        weather = WeatherResponse(
+                            coord = Coord(lon = 106.85, lat = -6.21),
+                            weather = listOf(
+                                Weather(
+                                    id = 800,
+                                    main = "Clear",
+                                    description = "clear sky",
+                                    icon = "01d"
+                                )
+                            ),
+                            base = "stations",
+                            main = Main(
+                                temp = 30.5,
+                                feelsLike = 33.2,
+                                tempMin = 29.0,
+                                tempMax = 32.0,
+                                pressure = 1012,
+                                humidity = 70
+                            ),
+                            visibility = 10000,
+                            wind = Wind(speed = 3.5, deg = 180, gust = null),
+                            clouds = Clouds(all = 20),
+                            dt = System.currentTimeMillis() / 1000,
+                            sys = Sys(
+                                type = 1,
+                                id = 9374,
+                                country = "ID",
+                                sunrise = 1635724800,
+                                sunset = 1635768000
+                            ),
+                            timezone = 25200,
+                            id = 1642911,
+                            name = "Jakarta",
+                            cod = 200
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = false, name = "Initial State Preview")
+@Composable
+fun InitialViewPreview() {
+    Week7LabTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF1A237E),
+                            Color(0xFF283593),
+                            Color(0xFF3949AB),
+                            Color(0xFF5C6BC0)
+                        )
+                    )
+                )
+        ) {
+            InitialView()
+        }
+    }
+}
+
+@Preview(showBackground = false, name = "Loading State Preview")
+@Composable
+fun LoadingViewPreview() {
+    Week7LabTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF1A237E),
+                            Color(0xFF283593),
+                            Color(0xFF3949AB),
+                            Color(0xFF5C6BC0)
+                        )
+                    )
+                )
+        ) {
+            LoadingView()
+        }
+    }
+}
+
+@Preview(showBackground = false, name = "Error State Preview")
+@Composable
+fun ErrorViewPreview() {
+    Week7LabTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF1A237E),
+                            Color(0xFF283593),
+                            Color(0xFF3949AB),
+                            Color(0xFF5C6BC0)
+                        )
+                    )
+                )
+        ) {
+            ErrorView("City not found. Please try another city.")
+        }
+    }
+}
 
 
