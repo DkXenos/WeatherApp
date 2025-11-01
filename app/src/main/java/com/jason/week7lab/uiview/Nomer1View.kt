@@ -32,7 +32,7 @@ import com.jason.week7lab.viewmodel.WeatherViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-@Composable
+@Composable aasdasdasd
 fun Soal1View(viewModel: WeatherViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     var searchText by remember { mutableStateOf("") }
