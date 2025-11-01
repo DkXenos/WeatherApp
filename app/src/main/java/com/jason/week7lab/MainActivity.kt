@@ -4,14 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.jason.week7lab.ui.theme.Week7LabTheme
+import com.jason.week7lab.uiview.ApiKeyConfigScreen
+import com.jason.week7lab.uiview.Soal1View
+import com.jason.week7lab.viewmodel.WeatherViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,29 +17,33 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Week7LabTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                WeatherApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun WeatherApp() {
+    val viewModel: WeatherViewModel = viewModel()
+    val apiKey by viewModel.apiKey.collectAsState()
+    var showConfigScreen by remember { mutableStateOf(true) }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Week7LabTheme {
-        Greeting("Android")
+    // Show config screen if no API key is set
+    LaunchedEffect(apiKey) {
+        if (apiKey.isNotEmpty()) {
+            showConfigScreen = false
+        }
+    }
+
+    if (showConfigScreen) {
+        ApiKeyConfigScreen(
+            viewModel = viewModel,
+            onApiKeySet = {
+                showConfigScreen = false
+            }
+        )
+    } else {
+        Soal1View(viewModel = viewModel)
     }
 }
